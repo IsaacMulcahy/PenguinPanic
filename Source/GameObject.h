@@ -1,50 +1,97 @@
 #pragma once
-#include <string>
-#include "SpriteComponent.h"
-#include "Vector2.h"
 
-/**
-*  Objects used throughout the game.
-*  Provides a nice solid base class for objects in this game world.
-*  They currently support only sprite components, but this could easily
-*  be extended to include things like rigid bodies or input systems. 
-*  @see SpriteComponent
-*/
+#include <Engine/OGLGame.h>
+
+
 class GameObject
 {
 public:
-	/**
-	*  Default constructor.
-	*/
-	GameObject() = default;
-	
-	/**
-	*  Destructor. Frees dynamic memory.
-	*/
-	~GameObject();
+	GameObject();
+	~GameObject() = default;
 
-	/**
-	*  Allocates and attaches a sprite component to the object. 
-	*  Part of this process will attempt to load a texture file.
-	*  If this fails this function will return false and the memory
-	*  allocated, freed. 
-	*  @param [in] renderer The renderer used to perform the allocations
-	*  @param [in] texture_file_name The file path to the the texture to load
-	*  @return true if the component is successfully added
-	*/
-	bool  addSpriteComponent(ASGE::Renderer* renderer, const std::string& texture_file_name);
-	
-	/**
-	*  Returns the sprite componenent.
-	*  IT IS HIGHLY RECOMMENDED THAT YOU CHECK THE STATUS OF THE POINTER
-	*  IS IS VALID FOR A COMPONENT TO BE NULL AS THEY ARE OPTIONAL!
-	*  @return a pointer to the objects sprite component (if any)
-	*/
-	 SpriteComponent* spriteComponent();
+	struct vector2
+	{
+		int x;
+		int y;
+	};
 
+	struct vector2f
+	{
+		float x;
+		float y;
+	};
 
-private:
+	enum OBJECT_TYPE
+	{
+		SOLID = 0,
+		BREAKABLE = 1,
+		MISSION_ITEM = 2
+	};
 
-	void freeSpriteComponent();	
-	SpriteComponent* sprite_component = nullptr;
+	enum ANIMATION_STATE
+	{
+		IDLE = 0,
+		MOVEMENT,
+		ATTACK
+	};
+
+	struct bounds
+	{
+		float top_x;
+		float top_y;
+		float bottom_x;
+		float bottom_y;
+	};
+
+	// Getting Object
+	bool passableCheck() const;
+	int getID() const;
+	OBJECT_TYPE getType() const;
+	vector2 getFacing() const;
+	ASGE::Sprite* getObject() const;
+	bounds getBound() const;
+	float getJumpStrength() const;
+	float getVelocity() const;
+	bool getGrounded() const;
+
+	// Setting Object
+	void setType(OBJECT_TYPE);
+	void setPassable(bool);
+	void changeFacing(vector2);
+	void updateBound();
+	void setJumpStrength(float);
+	void setGrounded(bool);
+	void setVelocity(float);
+	void setupAnimation(int, int);
+
+	// Actions 
+	void positionObject(int, int);
+	void moveObjectBy(int, int);
+	void moveForward(int, const ASGE::GameTime&);
+	void moveDown(float, const ASGE::GameTime&);
+	void loadObject(ASGE::Renderer*);
+	void loadObject(ASGE::Renderer*, char[]);
+	void loadObject(ASGE::Renderer*, std::string);
+	void animateObject(ANIMATION_STATE, int);
+	void increaseAnimationFrame();
+protected:
+	bool passable = false;
+	ASGE::Sprite* object = nullptr;
+	OBJECT_TYPE type = OBJECT_TYPE::SOLID;
+	vector2 facing;
+	bounds object_bound;
+
+	float velocity;
+	float jump_stength;
+	bool is_grounded;
+
+	int height_of_frame;
+	int width_of_frame;
+	ANIMATION_STATE animation_type;
+	int frame;
+
+	// ID
+	static int new_id;
+	const int id;
+
 };

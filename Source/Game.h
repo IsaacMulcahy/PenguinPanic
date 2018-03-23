@@ -3,6 +3,7 @@
 #include <Engine/OGLGame.h>
 
 #include "GameObject.h"
+#include "Menu.h"
 #include "Rect.h"
 
 
@@ -17,12 +18,16 @@ public:
 	~AngryBirdsGame();
 	virtual bool init() override;
 	
+	enum GAME_STATE
+	{
+		MENU = 0,
+		GAME = 1
+	};
 
 private:
 	void keyHandler(const ASGE::SharedEventData data);
 	void clickHandler(const ASGE::SharedEventData data);
 	void setupResolution();
-	bool loadBackgrounds();
 
 	virtual void update(const ASGE::GameTime &) override;
 	virtual void render(const ASGE::GameTime &) override;
@@ -31,8 +36,8 @@ private:
 	int  mouse_callback_id = -1;        /**< Mouse Input Callback ID. */
 
 	//Add your GameObjects
-	GameObject background_layer;
-	GameObject menu_layer;
+	std::unique_ptr<Menu> menu;
 
-	bool in_menu = true;
+	// State
+	GAME_STATE game_state = GAME_STATE::MENU;
 };

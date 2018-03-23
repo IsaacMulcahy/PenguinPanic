@@ -99,18 +99,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\GameObject.cpp" />
+    <ClCompile Include="..\..\Source\Gameplay.cpp" />
+    <ClCompile Include="..\..\Source\LevelController.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
     <ClCompile Include="..\..\Source\Game.cpp" />
-    <ClCompile Include="..\..\Source\Rect.cpp" />
+    <ClCompile Include="..\..\Source\Menu.cpp" />
     <ClCompile Include="..\..\Source\SpriteComponent.cpp" />
     <ClCompile Include="..\..\Source\Vector2.cpp" />
+    <ClCompile Include="..\..\Source\WorldController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Game.h" />
     <ClInclude Include="..\..\Source\GameObject.h" />
-    <ClInclude Include="..\..\Source\Rect.h" />
+    <ClInclude Include="..\..\Source\Gameplay.h" />
+    <ClInclude Include="..\..\Source\LevelController.h" />
+    <ClInclude Include="..\..\Source\Menu.h" />
     <ClInclude Include="..\..\Source\SpriteComponent.h" />
     <ClInclude Include="..\..\Source\Vector2.h" />
+    <ClInclude Include="..\..\Source\WorldController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

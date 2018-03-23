@@ -6,6 +6,7 @@
 #include <Engine/Sprite.h>
 
 #include "Game.h"
+#include "Menu.h"
 
 /**
 *   @brief   Default Constructor.
@@ -15,6 +16,8 @@
 AngryBirdsGame::AngryBirdsGame()
 {
 	std::srand(time(NULL));
+
+	menu = std::make_unique<Menu>();
 }
 
 /**
@@ -56,29 +59,6 @@ bool AngryBirdsGame::init()
 	mouse_callback_id =inputs->addCallbackFnc(
 		ASGE::E_MOUSE_CLICK, &AngryBirdsGame::clickHandler, this);
 
-	if (!loadBackgrounds())
-	{
-		return false;
-	}
-
-	if (!menu_layer.addSpriteComponent(renderer.get(), "Resources\\Textures\\menu.jpg"))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool AngryBirdsGame::loadBackgrounds()
-{
-	std::string filename = "Resources\\Textures\\lvl";
-	filename += std::to_string(std::rand() % 3 + 1);
-	filename += ".png";
-
-	if (!background_layer.addSpriteComponent(renderer.get(), filename))
-	{
-		return false;
-	}
 
 	return true;
 }
@@ -133,14 +113,6 @@ void AngryBirdsGame::keyHandler(const ASGE::SharedEventData data)
 			renderer->setWindowedMode(ASGE::Renderer::WindowMode::WINDOWED);
 		}
 	}
-	
-	else if (in_menu)
-	{
-		if (key->key == ASGE::KEYS::KEY_SPACE)
-		{
-			in_menu = !in_menu;
-		}
-	}
 }
 
 /**
@@ -159,6 +131,13 @@ void AngryBirdsGame::clickHandler(const ASGE::SharedEventData data)
 
 	double x_pos, y_pos;
 	inputs->getCursorPos(x_pos, y_pos);
+
+	switch (game_state)
+	{
+		case GAME_STATE::MENU:
+			menu->mouseControl(x_pos, y_pos, click);
+		break;
+	}
 }
 
 
@@ -171,15 +150,17 @@ void AngryBirdsGame::clickHandler(const ASGE::SharedEventData data)
 */
 void AngryBirdsGame::update(const ASGE::GameTime& us)
 {
-	if (!in_menu)
-	{
 
-	}
 
 	auto dt_sec = us.delta_time.count() / 1000.0;
 
 	//make sure you use delta time in any movement calculations!
-
+	switch (game_state)
+	{
+		case GAME_STATE::MENU:
+			menu->update(dt_sec);
+		break;
+	}
 
 }
 
@@ -194,12 +175,10 @@ void AngryBirdsGame::render(const ASGE::GameTime &)
 {
 	renderer->setFont(0);
 	
-	if (in_menu)
+	switch (game_state)
 	{
-		renderer->renderSprite(*menu_layer.spriteComponent()->getSprite());
-	}
-	else
-	{
-		renderer->renderSprite(*background_layer.spriteComponent()->getSprite());
+		case GAME_STATE::MENU:
+			menu->render(renderer.get());
+		break;
 	}
 }
