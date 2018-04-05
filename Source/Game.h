@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
 #include <Engine/OGLGame.h>
+#include "GameState.h"
 
 #include "GameObject.h"
-#include "Menu.h"
-#include "Rect.h"
 
+class Menu;
 
 /**
 *  An OpenGL Game based on ASGE.
@@ -17,12 +17,8 @@ public:
 	AngryBirdsGame();
 	~AngryBirdsGame();
 	virtual bool init() override;
-	
-	enum GAME_STATE
-	{
-		MENU = 0,
-		GAME = 1
-	};
+
+	void setGameState(GAME_STATE value) { game_state = value; };
 
 private:
 	void keyHandler(const ASGE::SharedEventData data);

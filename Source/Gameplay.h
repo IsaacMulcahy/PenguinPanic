@@ -1,9 +1,7 @@
 #pragma once
 
-#include "WorldObject.h"
 #include "WorldController.h"
 #include "LevelController.h"
-#include "State.h"
 
 class Gameplay
 {
@@ -20,7 +18,7 @@ public:
 		JUMP
 	};
 
-	bool init(ASGE::Renderer*, std::shared_ptr<State>, std::shared_ptr<LevelController>);
+	bool init(ASGE::Renderer*, int);
 	void render(int, int);
 	void mouseInput(const ASGE::ClickEvent*, double, double);
 	void keyInput(int, int);
@@ -34,7 +32,6 @@ private:
 
 	// Classes
 	std::unique_ptr<WorldController> world_controller;
-	std::shared_ptr<State> state_controller;
 	std::unique_ptr<LevelController> lvl_controller;
 	ASGE::Renderer* renderer;
 };

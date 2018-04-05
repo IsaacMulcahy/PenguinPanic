@@ -62,5 +62,15 @@
     <ClInclude Include="..\..\Source\Gameplay.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Header.h" />
+    <ClInclude Include="..\..\Source\GameObjectBlueprint.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Bounds.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ObjectType.h" />
+    <ClInclude Include="..\..\Source\AnimationState.h" />
+    <ClInclude Include="..\..\Source\GameState.h" />
   </ItemGroup>
 </Project>

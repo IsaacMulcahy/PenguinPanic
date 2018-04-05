@@ -5,6 +5,9 @@
 #include <Engine/InputEvents.h>
 #include <Engine/Sprite.h>
 
+#include "Bounds.h"
+#include "GameState.h"
+
 #include "Game.h"
 #include "Menu.h"
 
@@ -47,7 +50,7 @@ bool AngryBirdsGame::init()
 
 	toggleFPS();
 	renderer->setWindowTitle("Angry Birds!");
-	renderer->setWindowedMode(ASGE::Renderer::WindowMode::WINDOWED);
+	renderer->setWindowedMode(ASGE::Renderer::WindowMode::BORDERLESS);
 	renderer->setClearColour(ASGE::COLOURS::BLACK);
 
 	// input handling functions
@@ -59,6 +62,7 @@ bool AngryBirdsGame::init()
 	mouse_callback_id =inputs->addCallbackFnc(
 		ASGE::E_MOUSE_CLICK, &AngryBirdsGame::clickHandler, this);
 
+	menu->init(renderer.get());
 
 	return true;
 }
@@ -113,6 +117,14 @@ void AngryBirdsGame::keyHandler(const ASGE::SharedEventData data)
 			renderer->setWindowedMode(ASGE::Renderer::WindowMode::WINDOWED);
 		}
 	}
+
+	switch (game_state)
+	{
+	case GAME_STATE::MENU:
+		menu->keyboardControl(key, this);
+		break;
+
+	}
 }
 
 /**
@@ -132,10 +144,16 @@ void AngryBirdsGame::clickHandler(const ASGE::SharedEventData data)
 	double x_pos, y_pos;
 	inputs->getCursorPos(x_pos, y_pos);
 
+	Bounds mouse;
+	mouse.bottom_x = x_pos;
+	mouse.top_x = x_pos;
+	mouse.bottom_y = y_pos;
+	mouse.top_y = y_pos;
+
 	switch (game_state)
 	{
 		case GAME_STATE::MENU:
-			menu->mouseControl(x_pos, y_pos, click);
+			menu->mouseControl(mouse, click, this);
 		break;
 	}
 }
@@ -180,5 +198,6 @@ void AngryBirdsGame::render(const ASGE::GameTime &)
 		case GAME_STATE::MENU:
 			menu->render(renderer.get());
 		break;
+
 	}
 }

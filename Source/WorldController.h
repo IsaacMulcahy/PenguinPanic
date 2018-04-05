@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "Bounds.h"
 
 #include "GameObject.h"
 
@@ -10,7 +11,7 @@ class WorldController
 		~WorldController() = default;
 
 		bool collision(GameObject*, GameObject*);
-		bool collision(GameObject::bounds, GameObject::bounds);
+		bool collision(Bounds, Bounds);
 		bool zoneCollision(float, float, float, GameObject*);
 		void applyGravity(GameObject*, const ASGE::GameTime&);
 		float getGravityStrength();

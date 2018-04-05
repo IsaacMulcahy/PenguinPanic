@@ -109,14 +109,20 @@
     <ClCompile Include="..\..\Source\WorldController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\AnimationState.h" />
     <ClInclude Include="..\..\Source\Game.h" />
     <ClInclude Include="..\..\Source\GameObject.h" />
+    <ClInclude Include="..\..\Source\GameObjectBlueprint.h" />
     <ClInclude Include="..\..\Source\Gameplay.h" />
+    <ClInclude Include="..\..\Source\GameState.h" />
     <ClInclude Include="..\..\Source\LevelController.h" />
     <ClInclude Include="..\..\Source\Menu.h" />
+    <ClInclude Include="..\..\Source\ObjectType.h" />
     <ClInclude Include="..\..\Source\SpriteComponent.h" />
     <ClInclude Include="..\..\Source\Vector2.h" />
     <ClInclude Include="..\..\Source\WorldController.h" />
+    <ClInclude Include="Bounds.h" />
+    <ClInclude Include="Header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

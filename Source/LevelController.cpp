@@ -1,9 +1,11 @@
 #include <vector>
 #include <Engine/Sprite.h>
 
+#include "Vector2.h"
 #include "GameObject.h"
 #include "LevelController.h"
 #include "WorldController.h"
+#include "GameObjectBlueprint.h"
 
 LevelController::LevelController()
 {
@@ -30,7 +32,7 @@ void LevelController::makeLevel(int level_number, ASGE::Renderer* renderer)
 
 void LevelController::positionCamera(float x, float y)
 {
-	GameObject::vector2f difference;
+	vector2 difference = vector2(0, 0);
 
 	difference.x = camera_position.x - x;
 	difference.y = camera_position.y - y;
@@ -51,7 +53,7 @@ void LevelController::positionCamera(float x, float y)
 	camera_position.y = y;
 }
 
-GameObject::vector2 LevelController::getCameraPosition() const
+vector2 LevelController::getCameraPosition() const
 {
 	return camera_position;
 }
@@ -119,7 +121,7 @@ bool LevelController::collision(GameObject* object_a)
 
 		if (collision == true)
 		{
-			if (object_b->getType() == GameObject::OBJECT_TYPE::MISSION_ITEM)
+			if (object_b->getType() == OBJECT_TYPE::MISSION_ITEM)
 			{
 				level_completed = true;
 			}
@@ -244,7 +246,7 @@ void LevelController::createLevel(ASGE::Renderer* renderer)
 	
 }
 
-void LevelController::makeObjectFromBlueprint(LevelGenerator::GameObjectBlueprint blueprint, GameObject::vector2 current_offset, ASGE::Renderer* renderer)
+void LevelController::makeObjectFromBlueprint(GameObjectBlueprint blueprint, vector2 current_offset, ASGE::Renderer* renderer)
 {
 	object_list->push_back(GameObject());
 
@@ -260,6 +262,5 @@ void LevelController::createPlayer(ASGE::Renderer* renderer)
 {
 	player->loadObject(renderer, "..\\..\\Resources\\Textures\\Player\\Player.png");
 	player->positionObject(60, area_size.y - player->getObject()->height() - 10);
-	player->setJumpStrength(8);
 	player->setPassable(false);
 }

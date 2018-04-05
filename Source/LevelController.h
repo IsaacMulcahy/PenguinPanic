@@ -2,8 +2,10 @@
 #include <vector>
 #include <Engine/OGLGame.h>
 
+#include "Vector2.h"
 #include "GameObject.h"
 #include "WorldController.h"
+#include "GameObjectBlueprint.h"
 
 class LevelController
 {
@@ -13,7 +15,7 @@ public:
 
 	void makeLevel(int, ASGE::Renderer*);
 	void positionCamera(float x, float y);
-	GameObject::vector2 getCameraPosition() const;
+	vector2 getCameraPosition() const;
 	void renderLevel(ASGE::Renderer*, int, int);
 	void renderBackgrounds(ASGE::Renderer*, int, int);
 	void renderObjects(ASGE::Renderer*, int, int);
@@ -30,7 +32,7 @@ public:
 
 private:
 	void createLevel(ASGE::Renderer*);
-	void makeObjectFromBlueprint(GameObjectBlueprint, GameObject::vector2, ASGE::Renderer*);
+	void makeObjectFromBlueprint(GameObjectBlueprint, vector2, ASGE::Renderer*);
 	void createPlayer(ASGE::Renderer*);
 
 	std::unique_ptr<WorldController> world_controller;
@@ -40,9 +42,9 @@ private:
 	std::vector<GameObject> object_list[1];
 	GameObject* player;
 
-	GameObject::vector2 area_size;
-	GameObject::vector2 world_offset;
-	GameObject::vector2 camera_position;
+	vector2 area_size = vector2(0,0);
+	vector2 world_offset = vector2(0, 0);
+	vector2 camera_position = vector2(0, 0);
 
 	bool level_completed = false;
 	bool level_loaded = false;

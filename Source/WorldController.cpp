@@ -1,6 +1,7 @@
 #include "WorldController.h"
 #include <Engine/Sprite.h>
 #include <vector>
+#include "Bounds.h"
 
 WorldController::WorldController()
 {
@@ -10,8 +11,8 @@ WorldController::WorldController()
 bool WorldController::collision(GameObject* current, GameObject* world)
 {
 	// Setup Data for collision detection
-	GameObject::bounds current_bounds = current->getBound();
-	GameObject::bounds world_bounds = world->getBound();
+	Bounds current_bounds = current->getBound();
+	Bounds world_bounds = world->getBound();
 
 	// Check
 	if (current_bounds.top_x < world_bounds.bottom_x)
@@ -40,9 +41,8 @@ bool WorldController::collision(GameObject* current, GameObject* world)
 
 }
 
-bool WorldController::collision(GameObject::bounds current, GameObject::bounds world)
+bool WorldController::collision(Bounds current, Bounds world)
 {
-	// Setup Data for collision detection
 
 	// Check
 	if (current.top_x < world.bottom_x)
@@ -74,7 +74,7 @@ bool WorldController::collision(GameObject::bounds current, GameObject::bounds w
 
 bool WorldController::zoneCollision(float x1, float x2, float y, GameObject* world)
 {
-	GameObject::bounds world_bounds = world->getBound();
+	Bounds world_bounds = world->getBound();
 	
 	if (x1 < world_bounds.bottom_x)
 	{
