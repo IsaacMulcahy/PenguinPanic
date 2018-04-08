@@ -4,6 +4,7 @@
 #include "GameState.h"
 
 #include "GameObject.h"
+#include "GameLoop.h"
 
 class Menu;
 
@@ -33,6 +34,7 @@ private:
 
 	//Add your GameObjects
 	std::unique_ptr<Menu> menu;
+	std::unique_ptr<Gameplay> core_game;
 
 	// State
 	GAME_STATE game_state = GAME_STATE::MENU;

@@ -21,6 +21,7 @@ public:
 private:
 	void menuSetup(ASGE::Renderer* renderer);
 	void buttonSetup(ASGE::Renderer* renderer);
+	void buttonUse(AngryBirdsGame* main);
 
 	void updateButton();
 

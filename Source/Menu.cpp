@@ -17,6 +17,7 @@ Menu::Menu()
 void Menu::init(ASGE::Renderer* renderer)
 {
 	menuSetup(renderer);
+	updateButton();
 	
 }
 
@@ -29,14 +30,8 @@ void Menu::mouseControl(Bounds mouse, const ASGE::ClickEvent* click_event, Angry
 		{
 			current_select = i;
 			updateButton();
+			buttonUse(main);
 		}
-	}
-
-	switch (current_select)
-	{
-		case 0:
-			main->setGameState(GAME_STATE::GAME);
-		break;
 	}
 }
 
@@ -67,6 +62,10 @@ void Menu::keyboardControl(const ASGE::KeyEvent* key_event, AngryBirdsGame* main
 				current_select = button_item.size();
 			}
 			updateButton();
+		}
+		else if (key_event->key == ASGE::KEYS::KEY_ENTER)
+		{
+			buttonUse(main);
 		}
 	}
 }
@@ -128,5 +127,18 @@ void Menu::updateButton()
 			button_item[i].visualEffect(ASGE::COLOURS::LIGHTGRAY);
 			button_item[i].visualEffect(1.0f);
 		}
+	}
+}
+
+void Menu::buttonUse(AngryBirdsGame* main)
+{
+	switch (current_select)
+	{
+		case 0:
+			main->setGameState(GAME_STATE::GAME);
+		break;
+		case 1:
+			main->signalExit();
+		break;
 	}
 }

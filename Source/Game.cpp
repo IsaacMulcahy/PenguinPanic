@@ -9,6 +9,7 @@
 #include "GameState.h"
 
 #include "Game.h"
+#include "GameLoop.h"
 #include "Menu.h"
 
 /**
@@ -21,6 +22,7 @@ AngryBirdsGame::AngryBirdsGame()
 	std::srand(time(NULL));
 
 	menu = std::make_unique<Menu>();
+	core_game = std::make_unique<Gameplay>();
 }
 
 /**
@@ -120,8 +122,8 @@ void AngryBirdsGame::keyHandler(const ASGE::SharedEventData data)
 
 	switch (game_state)
 	{
-	case GAME_STATE::MENU:
-		menu->keyboardControl(key, this);
+		case GAME_STATE::MENU:
+			menu->keyboardControl(key, this);
 		break;
 
 	}
@@ -178,6 +180,9 @@ void AngryBirdsGame::update(const ASGE::GameTime& us)
 		case GAME_STATE::MENU:
 			menu->update(dt_sec);
 		break;
+		case GAME_STATE::GAME:
+			core_game->update(us);
+			break;
 	}
 
 }
@@ -197,6 +202,9 @@ void AngryBirdsGame::render(const ASGE::GameTime &)
 	{
 		case GAME_STATE::MENU:
 			menu->render(renderer.get());
+		break;
+		case GAME_STATE::GAME:
+			core_game->render(renderer.get(), 0, 0);
 		break;
 
 	}
