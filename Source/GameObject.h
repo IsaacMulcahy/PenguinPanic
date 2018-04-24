@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
-
 #include <Engine/OGLGame.h>
+#include <Engine/Sprite.h>
+
 #include "Vector2.h"
 #include "Bounds.h"
 #include "ObjectType.h"
@@ -19,28 +19,32 @@ public:
 	bool passableCheck() const { return passable; };
 	OBJECT_TYPE getType() const { return type; };
 	vector2 getFacing() const { return facing; }
-	ASGE::Sprite* getObject() const { return object; };
+	ASGE::Sprite* getObject() const { return object.get(); };
 	Bounds getBound() const { return object_bound; };
-	float getVelocity() const { return velocity; };
+	vector2 getVelocity() const { return velocity; };
 	bool getGrounded() const { return is_grounded; };
+	float getAngle() const { return angle; };
+	bool getPhysicsEnabled() const { return apply_physics; };
+	vector2 getObjectPosition() const { vector2 current_pos = vector2(0, 0); current_pos.x = object->xPos(); current_pos.y = object->yPos(); return current_pos;};
 
 	// ------------------ Setters ------------------
 	void setType(OBJECT_TYPE new_type) { type = new_type; };
 	void setPassable(bool value) { passable = value; };
 	void changeFacing(vector2 value) { facing = value; };
 	void setGrounded(bool value) { is_grounded = value; };
-	void setVelocity(float value) { velocity = value; };
+	void setVelocity(vector2 value) { velocity = value; };
+	void setVelocity(int x, int y) { velocity.x = x; velocity.y = y; };
+	void setPhysics(bool value) { apply_physics = value; };
 
 	// ------------------ Actions ------------------
 	void moveForward(int, const ASGE::GameTime&);
 	void moveDown(float, const ASGE::GameTime&);
+	void rotateObject(float value);
+	void update(const ASGE::GameTime&);
 	
 	// ------------------ Visual Effects ------------------
 	void visualEffect(float value);
 	void visualEffect(ASGE::Colour value);
-
-	// ------------------ Setup ------------------
-	void setupAnimation(int, int);
 
 	// ------------------ Loading File ------------------
 	void loadObject(ASGE::Renderer*);
@@ -49,30 +53,26 @@ public:
 
 	// ------------------ Position ------------------
 	void positionObject(int, int);
+	void positionObject(vector2);
 	void moveObjectBy(int, int);
-
-	// ------------------ Animation ------------------
-	void animateObject(ANIMATION_STATE, int);
-	void increaseAnimationFrame();
-
 private:
 	// ------------------ Sub Actions ------------------
 	void updateBound();
 
 protected:
 	bool passable = false;
-	ASGE::Sprite* object = nullptr;
+	std::unique_ptr<ASGE::Sprite> object;
 	OBJECT_TYPE type = OBJECT_TYPE::SOLID;
 	vector2 facing = vector2(0, 0);
 	Bounds object_bound;
 
-	float velocity;
-	float jump_stength;
-	bool is_grounded;
+	float angle = 0;
 
-	float height_of_frame;
-	float width_of_frame;
-	ANIMATION_STATE animation_type;
-	int frame;
+	vector2 velocity = vector2(0,0);
+	bool is_grounded = false;
+	bool apply_physics = false;
+
+	ANIMATION_STATE animation_type = ANIMATION_STATE::IDLE;
+
 
 };

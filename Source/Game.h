@@ -34,7 +34,7 @@ private:
 
 	//Add your GameObjects
 	std::unique_ptr<Menu> menu;
-	std::unique_ptr<Gameplay> core_game;
+	std::unique_ptr<GameLoop> core_game;
 
 	// State
 	GAME_STATE game_state = GAME_STATE::MENU;

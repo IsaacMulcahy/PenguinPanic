@@ -1,9 +1,17 @@
 #include "Cannon.h"
 
-void Cannon::setupObject(ASGE::Renderer* renderer)
+Cannon::Cannon(ASGE::Renderer* renderer)
 {
+	base = std::make_unique<GameObject>();
 	base->loadObject(renderer, "..\\..\\Resources\\Textures\\Cannon.png");
-	base->loadObject(renderer, "..\\..\\Resources\\Textures\\CannonLoaded.png");
+
+	loaded = std::make_unique<GameObject>();
+	loaded->loadObject(renderer, "..\\..\\Resources\\Textures\\CannonLoaded.png");
+}
+
+vector2 Cannon::getObjectPosition()
+{
+	return base->getObjectPosition();
 }
 
 void Cannon::positionObject(int x, int y)

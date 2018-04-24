@@ -22,7 +22,7 @@ AngryBirdsGame::AngryBirdsGame()
 	std::srand(time(NULL));
 
 	menu = std::make_unique<Menu>();
-	core_game = std::make_unique<Gameplay>();
+	core_game = std::make_unique<GameLoop>();
 }
 
 /**
@@ -51,7 +51,7 @@ bool AngryBirdsGame::init()
 	}
 
 	toggleFPS();
-	renderer->setWindowTitle("Angry Birds!");
+	renderer->setWindowTitle("Angry Penguins!");
 	renderer->setWindowedMode(ASGE::Renderer::WindowMode::BORDERLESS);
 	renderer->setClearColour(ASGE::COLOURS::BLACK);
 
@@ -65,6 +65,7 @@ bool AngryBirdsGame::init()
 		ASGE::E_MOUSE_CLICK, &AngryBirdsGame::clickHandler, this);
 
 	menu->init(renderer.get());
+	core_game->init(renderer.get(), 1);
 
 	return true;
 }
@@ -124,6 +125,9 @@ void AngryBirdsGame::keyHandler(const ASGE::SharedEventData data)
 	{
 		case GAME_STATE::MENU:
 			menu->keyboardControl(key, this);
+		break;
+		case GAME_STATE::GAME:
+			core_game->keyInput(key, this);
 		break;
 
 	}

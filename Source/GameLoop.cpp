@@ -6,6 +6,7 @@
 #include "Vector2.h"
 #include "GameLoop.h"
 #include "GameObject.h"
+#include "Cannon.h"
 #include "LevelController.h"
 
 bool GameLoop::init(ASGE::Renderer* render_ptr, int level)
@@ -16,7 +17,7 @@ bool GameLoop::init(ASGE::Renderer* render_ptr, int level)
 
 	lvl_controller->makeLevel(level, render_ptr);
 
-	render_ptr->setWindowTitle("Angry Birds - Level");
+	render_ptr->setWindowTitle("Angry Penguins - Level");
 
 	background = render_ptr->createUniqueSprite();
 
@@ -24,6 +25,7 @@ bool GameLoop::init(ASGE::Renderer* render_ptr, int level)
 	{
 		case 1:
 			background->loadTexture("..\\..\\Resources\\Textures\\lvl1.png");
+		break;
 	}
 
 	return true;
@@ -74,7 +76,7 @@ void GameLoop::keyInput(const ASGE::KeyEvent* key_event, AngryBirdsGame* main)
 	}
 	else if (key_event->key == ASGE::KEYS::KEY_SPACE)
 	{
-		
+		current_action = GameAction::SHOOT;
 	}
 	else if (key_event->key == ASGE::KEYS::KEY_ENTER)
 	{
@@ -100,6 +102,13 @@ void GameLoop::update(const ASGE::GameTime& time_data)
 
 	//lvl_controller->checkGravity(lvl_controller->getPlayer(), time_data);
 
+	lvl_controller->updateObjects(time_data);
+
+
+	if (lvl_controller->getCannon()->getState() == CANNON_STATE::LOADED)
+	{
+		lvl_controller->getCurrentPenguin()->positionObject(lvl_controller->getCannon()->getObjectPosition());
+	}
 
 	if (lvl_controller->levelWon() == true)
 	{
@@ -128,7 +137,13 @@ void GameLoop::processGameActions(const ASGE::GameTime& time_data)
 		}
 		break;
 	case GameAction::SHOOT:
-		
+		if (lvl_controller->getCannon()->getState() == CANNON_STATE::LOADED)
+		{
+			lvl_controller->getCurrentPenguin()->setVelocity(10, -5);
+			lvl_controller->getCurrentPenguin()->setPhysics(true);
+			lvl_controller->getCannon()->setState(CANNON_STATE::UNLOADED);
+			current_action = GameAction::NONE;
+		}
 		break;
 	}
 }

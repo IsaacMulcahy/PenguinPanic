@@ -98,8 +98,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Cannon.cpp" />
+    <ClCompile Include="..\..\Source\GameLoop.cpp" />
     <ClCompile Include="..\..\Source\GameObject.cpp" />
-    <ClCompile Include="..\..\Source\Gameplay.cpp" />
     <ClCompile Include="..\..\Source\LevelController.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
     <ClCompile Include="..\..\Source\Game.cpp" />
@@ -110,10 +111,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\AnimationState.h" />
+    <ClInclude Include="..\..\Source\Cannon.h" />
     <ClInclude Include="..\..\Source\Game.h" />
+    <ClInclude Include="..\..\Source\GameLoop.h" />
     <ClInclude Include="..\..\Source\GameObject.h" />
     <ClInclude Include="..\..\Source\GameObjectBlueprint.h" />
-    <ClInclude Include="..\..\Source\Gameplay.h" />
     <ClInclude Include="..\..\Source\GameState.h" />
     <ClInclude Include="..\..\Source\LevelController.h" />
     <ClInclude Include="..\..\Source\Menu.h" />

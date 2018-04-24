@@ -26,7 +26,7 @@ void Menu::mouseControl(Bounds mouse, const ASGE::ClickEvent* click_event, Angry
 
 	for (int i = 0; i < button_item.size(); i++)
 	{
-		if (world_controller->collision(mouse, button_item[i].getBound()) == true)
+		if (world_controller->collision(mouse, button_item[i]->getBound()) == true)
 		{
 			current_select = i;
 			updateButton();
@@ -84,7 +84,7 @@ void Menu::render(ASGE::Renderer* renderer)
 	// Display Buttons
 	for (int i = 0; i < button_item.size(); i++)
 	{
-		renderer->renderSprite(*button_item[i].getObject());
+		renderer->renderSprite(*button_item[i]->getObject());
 	}
 }
 
@@ -98,19 +98,19 @@ void Menu::menuSetup(ASGE::Renderer* renderer)
 
 void Menu::buttonSetup(ASGE::Renderer* renderer)
 {
-	int current_button = button_item.size();
 
 	// Play Button
-	button_item.push_back(GameObject());
-	button_item.at(current_button).loadObject(renderer, "..\\..\\Resources\\Textures\\Menu\\Play Button.png");
-	button_item.at(current_button).positionObject(375, 870);
-
-	current_button++;
+	std::unique_ptr<GameObject> new_button = std::make_unique<GameObject>();
+	new_button->loadObject(renderer, "..\\..\\Resources\\Textures\\Menu\\Play Button.png");
+	new_button->positionObject(375, 870);
+	button_item.push_back(std::move(new_button));
 
 	// Quit Button
-	button_item.push_back(GameObject());
-	button_item.at(current_button).loadObject(renderer, "..\\..\\Resources\\Textures\\Menu\\Exit Button.png");
-	button_item.at(current_button).positionObject(1300, 870);
+	new_button = std::make_unique<GameObject>();
+	new_button->loadObject(renderer, "..\\..\\Resources\\Textures\\Menu\\Exit Button.png");
+	new_button->positionObject(1300, 870);
+	button_item.push_back(std::move(new_button));
+
 }
 
 void Menu::updateButton()
@@ -119,13 +119,13 @@ void Menu::updateButton()
 	{
 		if (current_select == i)
 		{
-			button_item[i].visualEffect(ASGE::COLOURS::WHITE);
-			button_item[i].visualEffect(1.3f);
+			button_item[i]->visualEffect(ASGE::COLOURS::WHITE);
+			button_item[i]->visualEffect(1.3f);
 		}
 		else
 		{
-			button_item[i].visualEffect(ASGE::COLOURS::LIGHTGRAY);
-			button_item[i].visualEffect(1.0f);
+			button_item[i]->visualEffect(ASGE::COLOURS::LIGHTGRAY);
+			button_item[i]->visualEffect(1.0f);
 		}
 	}
 }

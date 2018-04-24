@@ -103,11 +103,11 @@ bool WorldController::zoneCollision(float x1, float x2, float y, GameObject* wor
 
 void WorldController::applyGravity(GameObject* current, const ASGE::GameTime& time_data)
 {
-	float current_velocity = current->getVelocity();
+	vector2 current_velocity = current->getVelocity();
 	
-	current_velocity += gravity_strength;
+	current_velocity.y += gravity_strength;
 	
-	current->moveDown(current_velocity, time_data);
+	current->moveDown(current_velocity.y, time_data);
 	current->setVelocity(current_velocity);
 }
 

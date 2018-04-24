@@ -30,7 +30,7 @@ private:
 
 	std::unique_ptr<WorldController> world_controller;
 
-	std::vector<GameObject> button_item;
+	std::vector<std::unique_ptr<GameObject>> button_item;
 
 	int current_select = 0;
 };

@@ -25,7 +25,10 @@
     <ClCompile Include="..\..\Source\Menu.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Gameplay.cpp">
+    <ClCompile Include="..\..\Source\GameLoop.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Cannon.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,9 +62,6 @@
     <ClInclude Include="..\..\Source\Menu.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Gameplay.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Header.h" />
     <ClInclude Include="..\..\Source\GameObjectBlueprint.h">
       <Filter>Headers</Filter>
@@ -72,5 +72,11 @@
     <ClInclude Include="..\..\Source\ObjectType.h" />
     <ClInclude Include="..\..\Source\AnimationState.h" />
     <ClInclude Include="..\..\Source\GameState.h" />
+    <ClInclude Include="..\..\Source\GameLoop.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Cannon.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
