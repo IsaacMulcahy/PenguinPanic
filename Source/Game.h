@@ -29,7 +29,8 @@ public:
 	void setLevelComplete() { level_completed[game_level-1] = true; };
 	bool levelUnlocked(int);
 	int getCurrentLevel() { return game_level; };
-	void addScore(int new_score) { level_score[game_level] = new_score; };
+	void addScore(int new_score) { level_score[game_level-1] = new_score; };
+	int getScore() { return score; };
 
 private:
 	void keyHandler(const ASGE::SharedEventData data);

@@ -63,7 +63,7 @@ void Menu::keyboardControl(const ASGE::KeyEvent* key_event, AngryBirdsGame* main
 			}
 			updateButton();
 		}
-		else if (key_event->key == ASGE::KEYS::KEY_ENTER)
+		else if (key_event->key == ASGE::KEYS::KEY_ENTER || key_event->key == ASGE::KEYS::KEY_SPACE)
 		{
 			buttonUse(main);
 		}

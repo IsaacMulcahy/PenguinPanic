@@ -35,6 +35,7 @@ void LevelSelection::mouseControl(Bounds mouse, const ASGE::ClickEvent* click_ev
 
 void LevelSelection::keyboardControl(const ASGE::KeyEvent* key_event, AngryBirdsGame* main)
 {
+
 	if (key_event->action == ASGE::KEYS::KEY_RELEASED)
 	{
 		if (key_event->key == ASGE::KEYS::KEY_RIGHT || key_event->key == ASGE::KEYS::KEY_DOWN)
@@ -61,7 +62,7 @@ void LevelSelection::keyboardControl(const ASGE::KeyEvent* key_event, AngryBirds
 			}
 			updateButton(main);
 		}
-		else if (key_event->key == ASGE::KEYS::KEY_ENTER)
+		else if (key_event->key == ASGE::KEYS::KEY_ENTER || key_event->key == ASGE::KEYS::KEY_SPACE)
 		{
 			buttonUse(main);
 		}
@@ -77,7 +78,7 @@ void LevelSelection::render(ASGE::Renderer* renderer)
 {
 	renderer->renderSprite(*background->getObject());
 
-	renderer->renderText(std::to_string(current_select), 0, 150);
+	renderer->renderText("Score: " + std::to_string(score), 850, 800, 2.0f, ASGE::COLOURS::WHITESMOKE);
 
 	// Display Buttons
 	for (int i = 0; i < button_item.size(); i++)
@@ -125,6 +126,8 @@ void LevelSelection::buttonSetup(ASGE::Renderer* renderer)
 
 void LevelSelection::updateButton(AngryBirdsGame* main)
 {
+	score = main->getScore();
+
 	for (int i = 0; i < button_item.size(); i++)
 	{
 		if (current_select == i)

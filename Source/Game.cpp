@@ -30,7 +30,7 @@ AngryBirdsGame::AngryBirdsGame()
 	win_screen = std::make_unique<WinScreen>();
 	lose_screen = std::make_unique<LoseScreen>();
 
-	for (int i = 0; i < numOfLevels - 1; i++)
+	for (int i = 0; i < numOfLevels ; i++)
 	{
 		level_completed.push_back(false);
 		level_score.push_back(0);
@@ -206,7 +206,7 @@ void AngryBirdsGame::update(const ASGE::GameTime& us)
 	// Calcuate score
 	score = 0;
 
-	for (int i = 0; i < numOfLevels - 1; i++)
+	for (int i = 0; i < numOfLevels; i++)
 	{
 		score += level_score[i];
 	}

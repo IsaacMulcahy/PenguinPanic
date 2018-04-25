@@ -596,9 +596,13 @@ void LevelController::levelThree(ASGE::Renderer* renderer)
 
 	current_penguin = std::make_unique<Penguin>();
 	current_penguin->loadObject(renderer, "..\\..\\Resources\\Textures\\Level\\Object\\Penguin.png");
-	current_penguin->positionObject(10, 868);
+	current_penguin->positionObject(10, 798);
 	penguin.push_back(std::move(current_penguin));
 
+	current_penguin = std::make_unique<Penguin>();
+	current_penguin->loadObject(renderer, "..\\..\\Resources\\Textures\\Level\\Object\\Penguin.png");
+	current_penguin->positionObject(10, 728);
+	penguin.push_back(std::move(current_penguin));
 
 	// World
 	std::unique_ptr<GameObject> current_object = std::make_unique<GameObject>();

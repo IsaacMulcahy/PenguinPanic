@@ -31,5 +31,5 @@ private:
 
 	std::vector<std::unique_ptr<GameObject>> button_item;
 
-	int current_select = 0;
+	int current_select = 1;
 };
