@@ -17,6 +17,8 @@ public:
 		NONE = 0,
 		UP,
 		DOWN,
+		POWER_UP,
+		POWER_DOWN,
 		SHOOT
 	};
 
@@ -26,10 +28,15 @@ public:
 	void keyInput(const ASGE::KeyEvent* key_event, AngryBirdsGame* main);
 	void processGameActions(const ASGE::GameTime& time_data);
 	void update(const ASGE::GameTime& time_data, AngryBirdsGame* main);
+
+	void tidyUp() { lvl_controller = std::make_unique<LevelController>(); };
 private:
 	void positionPenguinInCannon();
 
-	int score;
+	void levelCheck(AngryBirdsGame* main);
+
+	int lvl_score = 0;
+	float power = 10;
 	
 	std::unique_ptr<ASGE::Sprite> background;
 	GameAction current_action;

@@ -11,6 +11,9 @@
 #include "Game.h"
 #include "GameLoop.h"
 #include "Menu.h"
+#include "LevelSelection.h"
+#include "Win.h"
+#include "Lose.h"
 
 /**
 *   @brief   Default Constructor.
@@ -22,7 +25,16 @@ AngryBirdsGame::AngryBirdsGame()
 	std::srand(time(NULL));
 
 	menu = std::make_unique<Menu>();
+	level_selection = std::make_unique<LevelSelection>();
 	core_game = std::make_unique<GameLoop>();
+	win_screen = std::make_unique<WinScreen>();
+	lose_screen = std::make_unique<LoseScreen>();
+
+	for (int i = 0; i < numOfLevels - 1; i++)
+	{
+		level_completed.push_back(false);
+		level_score.push_back(0);
+	}
 }
 
 /**
@@ -33,6 +45,9 @@ AngryBirdsGame::~AngryBirdsGame()
 {
 	this->inputs->unregisterCallback(key_callback_id);
 	this->inputs->unregisterCallback(mouse_callback_id);
+
+	level_completed.clear();
+	level_score.clear();
 }
 
 /**
@@ -65,7 +80,9 @@ bool AngryBirdsGame::init()
 		ASGE::E_MOUSE_CLICK, &AngryBirdsGame::clickHandler, this);
 
 	menu->init(renderer.get());
-	core_game->init(renderer.get(), 1);
+	level_selection->init(renderer.get(), this);
+	win_screen->init(renderer.get());
+	lose_screen->init(renderer.get());
 
 	return true;
 }
@@ -126,10 +143,18 @@ void AngryBirdsGame::keyHandler(const ASGE::SharedEventData data)
 		case GAME_STATE::MENU:
 			menu->keyboardControl(key, this);
 		break;
+		case GAME_STATE::LEVEL_SELECTION:
+			level_selection->keyboardControl(key, this);
+			break;
 		case GAME_STATE::GAME:
 			core_game->keyInput(key, this);
 		break;
-
+		case GAME_STATE::Win:
+			win_screen->keyboardControl(key, this);
+		break;
+		case GAME_STATE::Lost:
+			lose_screen->keyboardControl(key, this);
+			break;
 	}
 }
 
@@ -178,14 +203,34 @@ void AngryBirdsGame::update(const ASGE::GameTime& us)
 
 	auto dt_sec = us.delta_time.count() / 1000.0;
 
+	// Calcuate score
+	score = 0;
+
+	for (int i = 0; i < numOfLevels - 1; i++)
+	{
+		score += level_score[i];
+	}
+
 	//make sure you use delta time in any movement calculations!
 	switch (game_state)
 	{
 		case GAME_STATE::MENU:
 			menu->update(dt_sec);
 		break;
+		case GAME_STATE::LEVEL_SELECTION:
+			level_selection->update(dt_sec);
+			break;
 		case GAME_STATE::GAME:
-			core_game->update(us, this);
+			if (level_setup == false)
+			{
+				core_game->tidyUp();
+				core_game->init(renderer.get(), game_level);
+				level_setup = true;
+			}
+			else
+			{
+				core_game->update(us, this);
+			}
 			break;
 	}
 
@@ -207,9 +252,37 @@ void AngryBirdsGame::render(const ASGE::GameTime &)
 		case GAME_STATE::MENU:
 			menu->render(renderer.get());
 		break;
+		case GAME_STATE::LEVEL_SELECTION:
+			level_selection->render(renderer.get());
+		break;
 		case GAME_STATE::GAME:
-			core_game->render(renderer.get(), 0, 0);
+			if (level_setup == true)
+			{
+				core_game->render(renderer.get(), 0, 0);
+			}
+		break;
+		case GAME_STATE::Win:
+			win_screen->render(renderer.get());
+		break;
+		case GAME_STATE::Lost:
+			lose_screen->render(renderer.get());
 		break;
 
+	}
+}
+
+bool AngryBirdsGame::levelUnlocked(int level)
+{
+	if (level == 0)
+	{
+		return true;
+	}
+	else if (level_completed[level - 1] == true)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }

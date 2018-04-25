@@ -25,7 +25,13 @@ bool GameLoop::init(ASGE::Renderer* render_ptr, int level)
 	switch(level)
 	{
 		case 1:
-			background->loadTexture("..\\..\\Resources\\Textures\\lvl1.png");
+			background->loadTexture("..\\..\\Resources\\Textures\\Level\\Backdrop\\lvl1.png");
+		break;
+		case 2:
+			background->loadTexture("..\\..\\Resources\\Textures\\Level\\Backdrop\\lvl1.png");
+		break;
+		case 3:
+			background->loadTexture("..\\..\\Resources\\Textures\\Level\\Backdrop\\lvl1.png");
 		break;
 	}
 
@@ -37,10 +43,6 @@ void GameLoop::render(ASGE::Renderer* render_ptr, int game_width, int game_heigh
 	
 	render_ptr->renderSprite(*background);
 	lvl_controller->renderLevel(render_ptr, game_width, game_height);
-
-	std::string text = "Score: " + std::to_string(score);
-
-	render_ptr->renderText(text, (game_width/2) - (20 * (text.size()/2)), 140, 1.5, ASGE::COLOURS::ORANGE);
 
 }
 
@@ -73,6 +75,14 @@ void GameLoop::keyInput(const ASGE::KeyEvent* key_event, AngryBirdsGame* main)
 	{
 		current_action = GameAction::UP;
 	}
+	else if (key_event->key == ASGE::KEYS::KEY_D || key_event->key == ASGE::KEYS::KEY_RIGHT)
+	{
+		current_action = GameAction::POWER_UP;
+	}
+	else if (key_event->key == ASGE::KEYS::KEY_A || key_event->key == ASGE::KEYS::KEY_LEFT)
+	{
+		current_action = GameAction::POWER_DOWN;
+	}
 	else if (key_event->key == ASGE::KEYS::KEY_SPACE)
 	{
 		current_action = GameAction::SHOOT;
@@ -94,57 +104,120 @@ void GameLoop::keyInput(const ASGE::KeyEvent* key_event, AngryBirdsGame* main)
 
 void GameLoop::update(const ASGE::GameTime& time_data, AngryBirdsGame* main)
 {
+	levelCheck(main);
 
 	processGameActions(time_data);
 
 	lvl_controller->updateObjects(time_data);
 
 	positionPenguinInCannon();
-
-	if (lvl_controller->levelWon() == true)
-	{
-		main->setGameState(GAME_STATE::MENU);
-	}
 }
 
 void GameLoop::processGameActions(const ASGE::GameTime& time_data)
 {
 	float rotation_value = 0;
 	
+	static float timer;
+	timer += (time_data.delta_time.count() / 1000.f);
+
 	switch (current_action)
 	{
 	case GameAction::UP:
 		if (lvl_controller->getCannon()->getAngle() > -0.1f)
 		{
-			rotation_value = -3 * (time_data.delta_time.count() / 1000.f);
+			rotation_value = -0.5 * (time_data.delta_time.count() / 1000.f);
 			lvl_controller->getCannon()->rotateObject(rotation_value);
 		}
 		break;
 	case GameAction::DOWN:
 		if (lvl_controller->getCannon()->getAngle() < 0.5f)
 		{
-			rotation_value = 3 * (time_data.delta_time.count() / 1000.f);
+			rotation_value = 0.5 * (time_data.delta_time.count() / 1000.f);
 			lvl_controller->getCannon()->rotateObject(rotation_value);
 		}
 		break;
-	case GameAction::SHOOT:
-		if (lvl_controller->getCannon()->getState() == CANNON_STATE::LOADED)
+	case GameAction::POWER_UP:
+		if (lvl_controller->getCurrentPenguin() != nullptr)
 		{
-			// Angle Calculation
-			float angle_height = 0;
-			float power = 10;
-		
-			angle_height = ((lvl_controller->getCannon()->getAngle() + 0.200073) - 6) ;
-
-			lvl_controller->getCurrentPenguin()->setVelocity(power, angle_height);
-			lvl_controller->getCurrentPenguin()->setPhysics(true);
-			lvl_controller->getCannon()->setState(CANNON_STATE::UNLOADED);
-			lvl_controller->getCurrentPenguin()->setVisability(true);
-			current_action = GameAction::NONE;
+			if (timer >= 0.3f)
+			{
+				if (power == 10)
+				{
+					lvl_controller->getCannon()->setState(CANNON_STATE::LOADED_HEAVY);
+					power = 11;
+				}
+				else if (power == 11)
+				{
+					lvl_controller->getCannon()->setState(CANNON_STATE::LOADED_LIGHT);
+					power = 9;
+				}
+				else
+				{
+					lvl_controller->getCannon()->setState(CANNON_STATE::LOADED);
+					power = 10;
+				}
+				timer = 0;
+			}
 		}
-		else
+		break;
+
+	case GameAction::POWER_DOWN:
+		if (lvl_controller->getCurrentPenguin() != nullptr)
 		{
-			lvl_controller->getCannon()->setState(CANNON_STATE::LOADED);
+			if (timer >= 0.3f)
+			{
+				if (power == 10)
+				{
+					lvl_controller->getCannon()->setState(CANNON_STATE::LOADED_LIGHT);
+					power = 9;
+				}
+				else if (power == 9)
+				{
+					lvl_controller->getCannon()->setState(CANNON_STATE::LOADED_HEAVY);
+					power = 11;
+				}
+				else
+				{
+					lvl_controller->getCannon()->setState(CANNON_STATE::LOADED);
+					power = 10;
+				}
+				timer = 0;
+			}
+		}
+		break;
+	case GameAction::SHOOT:
+		if (timer >= 0.5f)
+		{
+			if (lvl_controller->getCannon()->getState() == CANNON_STATE::LOADED
+				|| lvl_controller->getCannon()->getState() == CANNON_STATE::LOADED_LIGHT
+				|| lvl_controller->getCannon()->getState() == CANNON_STATE::LOADED_HEAVY)
+			{
+				if (lvl_controller->getCurrentPenguin() != nullptr)
+				{
+					// Angle Calculation
+					float angle_height = 0;
+
+					angle_height = ((lvl_controller->getCannon()->getAngle() - 0.500547) * 10);
+
+					lvl_controller->getCurrentPenguin()->setVelocity(power, angle_height);
+					lvl_controller->getCurrentPenguin()->setPhysics(true);
+					lvl_controller->getCannon()->setState(CANNON_STATE::UNLOADED);
+					lvl_controller->getCurrentPenguin()->setVisability(true);
+					lvl_controller->getCurrentPenguin()->setFired(true);
+					current_action = GameAction::NONE;
+					timer = 0;
+
+				}
+			}
+			else
+			{
+				if (lvl_controller->getCurrentPenguin() != nullptr)
+				{
+					lvl_controller->getCannon()->setPrevState();
+					current_action = GameAction::NONE;
+					timer = 0;
+				}
+			}
 		}
 		break;
 	}
@@ -152,7 +225,10 @@ void GameLoop::processGameActions(const ASGE::GameTime& time_data)
 
 void GameLoop::positionPenguinInCannon()
 {
-	if (lvl_controller->getCannon()->getState() == CANNON_STATE::LOADED)
+	
+	if (lvl_controller->getCannon()->getState() == CANNON_STATE::LOADED
+		|| lvl_controller->getCannon()->getState() == CANNON_STATE::LOADED_LIGHT
+		|| lvl_controller->getCannon()->getState() == CANNON_STATE::LOADED_HEAVY)
 	{
 		vector2 position = lvl_controller->getCannon()->getObjectPosition();
 		position.x += 150;
@@ -164,5 +240,26 @@ void GameLoop::positionPenguinInCannon()
 
 		lvl_controller->getCurrentPenguin()->positionObject(position);
 		lvl_controller->getCurrentPenguin()->setVisability(false);
+	}
+}
+
+void GameLoop::levelCheck(AngryBirdsGame* main)
+{
+	if (lvl_controller->levelWon() == true)
+	{
+		lvl_score += lvl_controller->penguinCount() * 100;
+		lvl_score += lvl_controller->currentSubScore();
+
+		main->addScore(lvl_score);
+		main->setGameState(GAME_STATE::Win);
+	}
+
+	if (current_action == GameAction::SHOOT)
+	{
+		if (lvl_controller->getCurrentPenguin() == nullptr)
+		{
+			current_action = GameAction::NONE;
+			main->setGameState(GAME_STATE::Lost);
+		}
 	}
 }
