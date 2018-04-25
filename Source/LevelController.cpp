@@ -40,6 +40,8 @@ void LevelController::updateObjects(const ASGE::GameTime& time)
 		{
 			penguin[i]->update(time);
 			checkGravity(penguin[i].get(), time);
+			collision(penguin[i].get());
+			checkNarwhales(penguin[i].get());
 		}
 	}
 }
@@ -50,6 +52,7 @@ void LevelController::renderLevel(ASGE::Renderer* renderer, int game_width, int 
 	cannon->render(renderer);
 	renderObjects(renderer, game_width, game_height);
 	renderPenguins(renderer, game_width, game_height);
+	renderNarwhales(renderer, game_width, game_height);
 }
 
 void LevelController::renderObjects(ASGE::Renderer* renderer, int game_width, int game_height)
@@ -57,14 +60,17 @@ void LevelController::renderObjects(ASGE::Renderer* renderer, int game_width, in
 	for (int i = 0; i < object_list.size(); i++)
 	{
 		GameObject* current_object = object_list[i].get();
-
-		if (current_object->getBound().bottom_x > 0 || current_object->getBound().bottom_y > 0)
+		
+		if (current_object->getVisable() == true)
 		{
-			if (current_object->getBound().top_x < game_width || current_object->getBound().top_y > game_height)
+			if (current_object->getBound().bottom_x > 0 || current_object->getBound().bottom_y > 0)
 			{
-				renderer->renderSprite(*current_object->getObject());
-			}
+				if (current_object->getBound().top_x < game_width || current_object->getBound().top_y > game_height)
+				{
+					renderer->renderSprite(*current_object->getObject());
+				}
 
+			}
 		}
 	}
 }
@@ -75,13 +81,36 @@ void LevelController::renderPenguins(ASGE::Renderer* renderer, int game_width, i
 	{
 		GameObject* current_object = penguin[i].get();
 
-		if (current_object->getBound().bottom_x > 0 || current_object->getBound().bottom_y > 0)
+		if (current_object->getVisable() == true)
 		{
-			if (current_object->getBound().top_x < game_width || current_object->getBound().top_y > game_height)
+			if (current_object->getBound().bottom_x > 0 || current_object->getBound().bottom_y > 0)
 			{
-				renderer->renderSprite(*current_object->getObject());
-			}
+				if (current_object->getBound().top_x < game_width || current_object->getBound().top_y > game_height)
+				{
+					renderer->renderSprite(*current_object->getObject());
+				}
 
+			}
+		}
+	}
+}
+
+void LevelController::renderNarwhales(ASGE::Renderer* renderer, int game_width, int game_height)
+{
+	for (int i = 0; i < narwhale.size(); i++)
+	{
+		GameObject* current_object = narwhale[i].get();
+
+		if (current_object->getVisable() == true)
+		{
+			if (current_object->getBound().bottom_x > 0 || current_object->getBound().bottom_y > 0)
+			{
+				if (current_object->getBound().top_x < game_width || current_object->getBound().top_y > game_height)
+				{
+					renderer->renderSprite(*current_object->getObject());
+				}
+
+			}
 		}
 	}
 }
@@ -110,10 +139,6 @@ bool LevelController::collision(GameObject* object_a)
 
 		if (collision == true)
 		{
-			if (object_b->getType() == OBJECT_TYPE::MISSION_ITEM)
-			{
-				level_completed = true;
-			}
 
 			if (object_b->passableCheck() == false)
 			{
@@ -148,7 +173,6 @@ bool LevelController::isGrounded(GameObject* object_a, const ASGE::GameTime& tim
 
 		if (collision == true)
 		{
-
 			return true;
 		}
 	}
@@ -211,10 +235,31 @@ void LevelController::checkGravity(GameObject* current, const ASGE::GameTime& ti
 			}
 
 			vector2 new_velocity = current->getVelocity();
+
+			float friction_effect = current->getVelocity().x * (300 * (time_data.delta_time.count() / 1000));
+			new_velocity.x = friction_effect;
 			new_velocity.y = 0;
 			current->setVelocity(new_velocity);
 		}
 	}
+}
+
+void LevelController::checkNarwhales(GameObject* current)
+{
+	bool collision = false;
+
+	for (int i = 0; i < narwhale.size(); i++)
+	{
+		GameObject* object_b = narwhale[i].get();
+
+		collision = world_controller->collision(current, object_b);
+
+		if (collision == true)
+		{
+			narwhale[i]->setVisability(false);
+		}
+	}
+
 }
 
 
@@ -235,18 +280,33 @@ bool LevelController::levelLoaded()
 
 bool LevelController::levelWon()
 {
-	return level_completed;
-}
+	int tally = 0;
 
-void LevelController::debugSetLevelWon()
-{
-	level_completed = true;
+	for (int i = 0; i < narwhale.size(); i++)
+	{
+		if (narwhale[i]->getVisable() == false)
+		{
+			tally++;
+		}
+	}
+
+	if (tally == narwhale.size())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void LevelController::createLevel(ASGE::Renderer* renderer, int level_number)
 {
 	cannon = std::make_unique<Cannon>(renderer);
 	cannon->positionObject(100, 830);
+
+	// Centre angle of cannon
+	//cannon->setupAngle(0.2f);
 	
 	switch (level_number)
 	{
@@ -281,9 +341,17 @@ void LevelController::levelOne(ASGE::Renderer* renderer)
 
 	object_list.push_back(std::move(current_object));
 	
+
+	// Narwhales
 	current_object = std::make_unique<GameObject>();
 	current_object->loadObject(renderer, "..\\..\\Resources\\Textures\\Narwhale.png");
-	current_object->positionObject(1700, 785);
+	current_object->positionObject(1700, 941);
 
-	object_list.push_back(std::move(current_object));
+	narwhale.push_back(std::move(current_object));
+
+	current_object = std::make_unique<GameObject>();
+	current_object->loadObject(renderer, "..\\..\\Resources\\Textures\\Narwhale.png");
+	current_object->positionObject(1400, 941);
+
+	narwhale.push_back(std::move(current_object));
 }

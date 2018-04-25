@@ -26,6 +26,7 @@ public:
 	float getAngle() const { return angle; };
 	bool getPhysicsEnabled() const { return apply_physics; };
 	vector2 getObjectPosition() const { vector2 current_pos = vector2(0, 0); current_pos.x = object->xPos(); current_pos.y = object->yPos(); return current_pos;};
+	bool getVisable() const { return visiable; };
 
 	// ------------------ Setters ------------------
 	void setType(OBJECT_TYPE new_type) { type = new_type; };
@@ -35,6 +36,8 @@ public:
 	void setVelocity(vector2 value) { velocity = value; };
 	void setVelocity(int x, int y) { velocity.x = x; velocity.y = y; };
 	void setPhysics(bool value) { apply_physics = value; };
+	void setupAngle(float value) { angle = value; };
+	void setVisability(bool value) { visiable = value; };
 
 	// ------------------ Actions ------------------
 	void moveForward(int, const ASGE::GameTime&);
@@ -71,6 +74,7 @@ protected:
 	vector2 velocity = vector2(0,0);
 	bool is_grounded = false;
 	bool apply_physics = false;
+	bool visiable = true;
 
 	ANIMATION_STATE animation_type = ANIMATION_STATE::IDLE;
 

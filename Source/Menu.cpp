@@ -39,7 +39,7 @@ void Menu::keyboardControl(const ASGE::KeyEvent* key_event, AngryBirdsGame* main
 {
 	if (key_event->action == ASGE::KEYS::KEY_RELEASED)
 	{
-		if (key_event->key == ASGE::KEYS::KEY_RIGHT)
+		if (key_event->key == ASGE::KEYS::KEY_RIGHT || key_event->key == ASGE::KEYS::KEY_DOWN)
 		{
 			if (current_select < button_item.size()-1)
 			{
@@ -51,7 +51,7 @@ void Menu::keyboardControl(const ASGE::KeyEvent* key_event, AngryBirdsGame* main
 			}
 			updateButton();
 		} 
-		else if (key_event->key == ASGE::KEYS::KEY_LEFT)
+		else if (key_event->key == ASGE::KEYS::KEY_LEFT || key_event->key == ASGE::KEYS::KEY_UP)
 		{
 			if (current_select > 0)
 			{
@@ -59,7 +59,7 @@ void Menu::keyboardControl(const ASGE::KeyEvent* key_event, AngryBirdsGame* main
 			}
 			else
 			{
-				current_select = button_item.size();
+				current_select = button_item.size() - 1;
 			}
 			updateButton();
 		}
@@ -90,7 +90,7 @@ void Menu::render(ASGE::Renderer* renderer)
 
 void Menu::menuSetup(ASGE::Renderer* renderer)
 {
-	background->loadObject(renderer, "..\\..\\Resources\\Textures\\Menu\\menu.jpg");
+	background->loadObject(renderer, "..\\..\\Resources\\Textures\\Menu\\menu.png");
 
 	buttonSetup(renderer);
 
@@ -102,13 +102,13 @@ void Menu::buttonSetup(ASGE::Renderer* renderer)
 	// Play Button
 	std::unique_ptr<GameObject> new_button = std::make_unique<GameObject>();
 	new_button->loadObject(renderer, "..\\..\\Resources\\Textures\\Menu\\Play Button.png");
-	new_button->positionObject(375, 870);
+	new_button->positionObject(95, 300);
 	button_item.push_back(std::move(new_button));
 
 	// Quit Button
 	new_button = std::make_unique<GameObject>();
 	new_button->loadObject(renderer, "..\\..\\Resources\\Textures\\Menu\\Exit Button.png");
-	new_button->positionObject(1300, 870);
+	new_button->positionObject(95, 450);
 	button_item.push_back(std::move(new_button));
 
 }

@@ -185,7 +185,7 @@ void AngryBirdsGame::update(const ASGE::GameTime& us)
 			menu->update(dt_sec);
 		break;
 		case GAME_STATE::GAME:
-			core_game->update(us);
+			core_game->update(us, this);
 			break;
 	}
 

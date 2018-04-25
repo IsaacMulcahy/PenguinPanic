@@ -25,6 +25,7 @@ public:
 	void renderLevel(ASGE::Renderer*, int, int);
 	void renderObjects(ASGE::Renderer*, int, int);
 	void renderPenguins(ASGE::Renderer*, int, int);
+	void renderNarwhales(ASGE::Renderer*, int, int);
 	
 	// Getters
 	Cannon* getCannon() const;
@@ -34,12 +35,12 @@ public:
 	bool isGrounded(GameObject*, const ASGE::GameTime&);
 	bool passableGround(GameObject*, const ASGE::GameTime&);
 	void checkGravity(GameObject*, const ASGE::GameTime&);
+	void checkNarwhales(GameObject*);
 	
 	// Level Control
 	void makeLevel(int, ASGE::Renderer*);
 	bool levelLoaded();
 	bool levelWon();
-	void debugSetLevelWon();
 
 	GameObject* getCurrentPenguin();
 	
@@ -53,11 +54,11 @@ private:
 	std::unique_ptr<Cannon> cannon;
 	std::vector<std::unique_ptr<GameObject>> object_list;
 	std::vector<std::unique_ptr<GameObject>> penguin;
+	std::vector<std::unique_ptr<GameObject>> narwhale;
 
 	vector2 area_size = vector2(0,0);
 	vector2 world_offset = vector2(0, 0);
 	vector2 camera_position = vector2(0, 0);
 
-	bool level_completed = false;
 	bool level_loaded = false;
 };

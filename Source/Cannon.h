@@ -17,6 +17,7 @@ public:
 	void setState(CANNON_STATE updated_state) { state = updated_state; };
 	CANNON_STATE getState() const { return state; };
 	float getAngle() const { return base->getAngle(); };
+	void setupAngle(float value) { base->setupAngle(value); };
 
 	vector2 getObjectPosition();
 	void positionObject(int, int);

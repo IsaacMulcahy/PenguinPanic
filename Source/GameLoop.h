@@ -25,8 +25,10 @@ public:
 	void mouseInput(const ASGE::ClickEvent*, double mouse_x, double mouse_y);
 	void keyInput(const ASGE::KeyEvent* key_event, AngryBirdsGame* main);
 	void processGameActions(const ASGE::GameTime& time_data);
-	void update(const ASGE::GameTime& time_data);
+	void update(const ASGE::GameTime& time_data, AngryBirdsGame* main);
 private:
+	void positionPenguinInCannon();
+
 	int score;
 	
 	std::unique_ptr<ASGE::Sprite> background;
