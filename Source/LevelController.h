@@ -3,49 +3,57 @@
 #include <Engine/OGLGame.h>
 
 #include "Vector2.h"
-#include "GameObject.h"
+#include "Cannon.h"
+#include "Penguin.h"
 #include "WorldController.h"
-#include "GameObjectBlueprint.h"
+
+class GameObject;
 
 class LevelController
 {
 public:
 	LevelController();
-	~LevelController();
+	~LevelController() = default;
+	
+	// Update
+	void updateObjects(const ASGE::GameTime&);
 
-	void makeLevel(int, ASGE::Renderer*);
-	void positionCamera(float x, float y);
-	vector2 getCameraPosition() const;
+	// Rendering
 	void renderLevel(ASGE::Renderer*, int, int);
-	void renderBackgrounds(ASGE::Renderer*, int, int);
 	void renderObjects(ASGE::Renderer*, int, int);
-	void renderPlayer(ASGE::Renderer*) const;
-	GameObject* getPlayer() const;
+	void renderPenguins(ASGE::Renderer*, int, int);
+	void renderNarwhales(ASGE::Renderer*, int, int);
+	
+	// Getters
+	Cannon* getCannon() const;
+	int currentSubScore() const { return current_score; };
+	
+	// Physics
 	bool collision(GameObject*);
 	bool isGrounded(GameObject*, const ASGE::GameTime&);
-	bool passableGround(GameObject*, const ASGE::GameTime&);
 	void checkGravity(GameObject*, const ASGE::GameTime&);
-	bool levelLoaded();
-	bool levelWon();
-	void debugSetLevelWon();
+	void checkNarwhales(GameObject*);
 	
+	// Level Control
+	void makeLevel(int, ASGE::Renderer*);
+	bool levelWon();
+
+	Penguin* getCurrentPenguin();
+	int penguinCount();
 
 private:
-	void createLevel(ASGE::Renderer*);
-	void makeObjectFromBlueprint(GameObjectBlueprint, vector2, ASGE::Renderer*);
-	void createPlayer(ASGE::Renderer*);
+	void createLevel(ASGE::Renderer*, int level_number);
+	void levelOne(ASGE::Renderer*);
+	void levelTwo(ASGE::Renderer*);
+	void levelThree(ASGE::Renderer*);
 
 	std::unique_ptr<WorldController> world_controller;
-	std::vector<GameObject> blueprint;
 
-	std::vector<GameObject> background_list[1];
-	std::vector<GameObject> object_list[1];
-	GameObject* player;
+	std::unique_ptr<Cannon> cannon;
+	std::vector<std::unique_ptr<GameObject>> object_list;
+	std::vector<std::unique_ptr<Penguin>> penguin;
+	std::vector<std::unique_ptr<GameObject>> narwhale;
 
-	vector2 area_size = vector2(0,0);
-	vector2 world_offset = vector2(0, 0);
-	vector2 camera_position = vector2(0, 0);
-
-	bool level_completed = false;
+	int current_score = 0;
 	bool level_loaded = false;
 };

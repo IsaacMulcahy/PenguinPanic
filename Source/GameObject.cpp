@@ -5,6 +5,13 @@
 #include "GameObject.h"
 #include "Bounds.h"
 
+// ------------------ Setup ------------------
+GameObject::GameObject()
+{
+	facing.x = 1;
+	facing.y = 0;
+}
+
 // ------------------ Actions ------------------
 void GameObject::moveForward(int value, const ASGE::GameTime& time_data)
 {
@@ -29,6 +36,19 @@ void GameObject::moveDown(float value, const ASGE::GameTime& time_data)
 	updateBound();
 }
 
+void GameObject::rotateObject(float value)
+{
+	angle += value;
+
+	object->rotationInRadians(angle);
+}
+
+void GameObject::update(const ASGE::GameTime& time)
+{
+	moveForward(velocity.x, time);
+	moveDown(velocity.y, time);
+}
+
 
 // ------------------ Sub Actions (Private) ------------------
 void GameObject::updateBound()
@@ -51,25 +71,10 @@ void GameObject::visualEffect(ASGE::Colour value)
 	object->colour(value);
 }
 
-// ------------------ Setup ------------------
-GameObject::GameObject()
-{
-	facing.x = 1;
-	facing.y = 0;
-}
-
-void GameObject::setupAnimation(int sizeX, int sizeY)
-{
-	height_of_frame = sizeY;
-	width_of_frame = sizeX;
-
-	//object->srcRect(0.0f, 0.0f, width_of_frame, height_of_frame);
-}
-
 // ------------------ Loading File ------------------
 void GameObject::loadObject(ASGE::Renderer* renderer)
 {
-	object = renderer->createRawSprite();
+	object = renderer->createUniqueSprite();
 	object->loadTexture("..\\..\\Resources\\Textures\\error.png");
 	object->xPos(60);
 	object->yPos(350);
@@ -78,7 +83,7 @@ void GameObject::loadObject(ASGE::Renderer* renderer)
 
 void GameObject::loadObject(ASGE::Renderer* renderer, char filename[])
 {
-	object = renderer->createRawSprite();
+	object = renderer->createUniqueSprite();
 
 	if (!object->loadTexture(filename))
 	{
@@ -92,7 +97,7 @@ void GameObject::loadObject(ASGE::Renderer* renderer, char filename[])
 
 void GameObject::loadObject(ASGE::Renderer* renderer, std::string filename)
 {
-	object = renderer->createRawSprite();
+	object = renderer->createUniqueSprite();
 
 	if (!object->loadTexture(filename))
 	{
@@ -112,20 +117,16 @@ void GameObject::positionObject(int x, int y)
 	updateBound();
 }
 
+void GameObject::positionObject(vector2 value)
+{
+	object->xPos(value.x);
+	object->yPos(value.y);
+	updateBound();
+}
+
 void GameObject::moveObjectBy(int x, int y)
 {
 	object->xPos(object->xPos() + x);
 	object->yPos(object->yPos() + y);
 	updateBound();
-}
-
-// ------------------ Animation ------------------
-void GameObject::animateObject(ANIMATION_STATE change_to_state, int set_frame)
-{
-
-}
-
-void GameObject::increaseAnimationFrame()
-{
-
 }

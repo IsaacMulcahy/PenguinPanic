@@ -16,6 +16,6 @@ class WorldController
 		void applyGravity(GameObject*, const ASGE::GameTime&);
 		float getGravityStrength();
 	private:
-		float gravity_strength = 0.7f;
+		float gravity_strength = 5.f;
 
 };

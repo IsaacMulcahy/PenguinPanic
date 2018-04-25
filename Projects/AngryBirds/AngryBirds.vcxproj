@@ -98,31 +98,39 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Cannon.cpp" />
+    <ClCompile Include="..\..\Source\GameLoop.cpp" />
     <ClCompile Include="..\..\Source\GameObject.cpp" />
-    <ClCompile Include="..\..\Source\Gameplay.cpp" />
     <ClCompile Include="..\..\Source\LevelController.cpp" />
+    <ClCompile Include="..\..\Source\LevelSelection.cpp" />
+    <ClCompile Include="..\..\Source\Lose.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
     <ClCompile Include="..\..\Source\Game.cpp" />
     <ClCompile Include="..\..\Source\Menu.cpp" />
     <ClCompile Include="..\..\Source\SpriteComponent.cpp" />
     <ClCompile Include="..\..\Source\Vector2.cpp" />
+    <ClCompile Include="..\..\Source\Win.cpp" />
     <ClCompile Include="..\..\Source\WorldController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\AnimationState.h" />
+    <ClInclude Include="..\..\Source\Cannon.h" />
     <ClInclude Include="..\..\Source\Game.h" />
+    <ClInclude Include="..\..\Source\GameLoop.h" />
     <ClInclude Include="..\..\Source\GameObject.h" />
     <ClInclude Include="..\..\Source\GameObjectBlueprint.h" />
-    <ClInclude Include="..\..\Source\Gameplay.h" />
     <ClInclude Include="..\..\Source\GameState.h" />
     <ClInclude Include="..\..\Source\LevelController.h" />
+    <ClInclude Include="..\..\Source\LevelSelection.h" />
+    <ClInclude Include="..\..\Source\Lose.h" />
     <ClInclude Include="..\..\Source\Menu.h" />
     <ClInclude Include="..\..\Source\ObjectType.h" />
     <ClInclude Include="..\..\Source\SpriteComponent.h" />
     <ClInclude Include="..\..\Source\Vector2.h" />
+    <ClInclude Include="..\..\Source\Win.h" />
     <ClInclude Include="..\..\Source\WorldController.h" />
     <ClInclude Include="Bounds.h" />
-    <ClInclude Include="Header.h" />
+    <ClInclude Include="Penguin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

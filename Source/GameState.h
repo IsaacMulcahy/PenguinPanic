@@ -2,5 +2,8 @@
 enum GAME_STATE
 {
 	MENU = 0,
-	GAME = 1
+	LEVEL_SELECTION,
+	GAME,
+	Win,
+	Lost
 };

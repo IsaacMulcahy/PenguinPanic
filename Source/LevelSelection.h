@@ -7,15 +7,15 @@
 
 class AngryBirdsGame;
 
-class Menu
+class LevelSelection
 {
 public:
-	Menu();
-	~Menu() = default;
+	LevelSelection();
+	~LevelSelection() = default;
 
-	void init(ASGE::Renderer* renderer);
+	void init(ASGE::Renderer* renderer, AngryBirdsGame* main);
 	void mouseControl(Bounds mouse, const ASGE::ClickEvent* click_event, AngryBirdsGame* main);
-	void keyboardControl(const ASGE::KeyEvent* , AngryBirdsGame* main);
+	void keyboardControl(const ASGE::KeyEvent*, AngryBirdsGame* main);
 	void update(double delta_time);
 	void render(ASGE::Renderer* renderer);
 private:
@@ -23,7 +23,7 @@ private:
 	void buttonSetup(ASGE::Renderer* renderer);
 	void buttonUse(AngryBirdsGame* main);
 
-	void updateButton();
+	void updateButton(AngryBirdsGame* main);
 
 	std::unique_ptr<GameObject> background;
 	std::unique_ptr<GameObject> game_logo;
@@ -33,4 +33,5 @@ private:
 	std::vector<std::unique_ptr<GameObject>> button_item;
 
 	int current_select = 0;
-};
+	int score; 
+}; 
